@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2026 皇家閱讀魔法森林 - 雲端同步版</title>
+    <title>2026 皇家魔法閱讀森林 - 五階進化版</title>
     <style>
         :root {
             --royal-purple: #6a5acd;
@@ -20,7 +20,15 @@
             color: #333;
         }
 
-        /* 頂部總覽表 */
+        /* 頂部總覽儀表板 */
+        .overall-stats {
+            display: flex; justify-content: space-around; padding: 15px;
+            background: white; border-radius: 20px; margin-bottom: 20px;
+            border: 2px solid var(--magic-gold); box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        .stat-box b { font-size: 22px; color: var(--royal-purple); }
+
+        /* 月份總覽表格 */
         .summary-table {
             background: white; border-radius: 20px; width: 100%;
             border-collapse: collapse; margin-bottom: 25px;
@@ -29,33 +37,28 @@
         .summary-table th { background: var(--royal-purple); color: white; padding: 12px; }
         .summary-table td { padding: 10px; text-align: center; border-bottom: 1px solid #eee; }
 
-        .overall-stats {
-            display: flex; justify-content: space-around; padding: 15px;
-            background: white; border-radius: 20px; margin-bottom: 20px;
-            border: 2px solid var(--magic-gold);
-        }
-        .stat-box b { font-size: 20px; color: var(--royal-purple); }
-
         /* 養殖卡片區 */
         .grid-container {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 45px 25px; padding-top: 40px;
+            gap: 50px 25px; padding-top: 50px;
         }
 
         .animal-card {
             background: white; border-radius: 35px; border: 4px solid white;
-            outline: 2px solid var(--vine-green); position: relative;
+            outline: 2.5px solid var(--vine-green); position: relative;
             padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); text-align: center;
+            transition: transform 0.3s;
         }
 
-        /* 漂浮動物頭像 */
+        /* 魔法漂浮核心 */
         .avatar-circle {
-            width: 100px; height: 100px; background: white;
+            width: 110px; height: 110px; background: white;
             border: 5px solid var(--vine-green); border-radius: 50%;
-            position: absolute; top: -55px; left: 50%; transform: translateX(-50%);
+            position: absolute; top: -60px; left: 50%; transform: translateX(-50%);
             display: flex; align-items: center; justify-content: center;
-            font-size: 55px; box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+            font-size: 60px; box-shadow: 0 8px 20px rgba(0,0,0,0.1);
             animation: float 3s ease-in-out infinite;
+            z-index: 5;
         }
 
         @keyframes float {
@@ -63,20 +66,167 @@
             50% { transform: translate(-50%, -15px); }
         }
 
-        .deco-vine { position: absolute; top: 10px; right: 15px; font-size: 18px; color: var(--magic-gold); }
-        .month-name { font-size: 22px; font-weight: bold; color: var(--royal-purple); margin-top: 45px; }
+        /* 星星藤蔓裝飾 */
+        .deco-vine { position: absolute; top: 10px; right: 15px; font-size: 20px; color: var(--magic-gold); }
+        .deco-leaf { position: absolute; top: 10px; left: 15px; font-size: 20px; }
+        .month-name { font-size: 24px; font-weight: bold; color: var(--royal-purple); margin-top: 55px; }
 
-        /* 進度條 */
+        /* 進度條 (目標設為 40 本) */
         .progress-container {
-            background: #eee; height: 14px; border-radius: 7px;
+            background: #eee; height: 16px; border-radius: 8px;
             margin: 15px 0; overflow: hidden; border: 1px solid #ddd;
         }
-        .progress-bar { height: 100%; background: linear-gradient(90deg, #ffafcc, #ff85a1); transition: 1.5s; width: 0%; }
+        .progress-bar { height: 100%; background: linear-gradient(90deg, #ffafcc, #ff85a1, #f8adff); transition: 1.5s; width: 0%; }
 
         /* 輸入與清單 */
         .input-group { display: flex; gap: 8px; margin: 15px 0; }
-        input { flex: 1; border: 1.5px solid #eee; padding: 10px; border-radius: 12px; outline: none; }
-        .magic-btn { background: var(--royal-purple); color: white; border: none; padding: 0 15px; border-radius: 12px; cursor: pointer; }
+        input { flex: 1; border: 1.5px solid #eee; padding: 10px; border-radius: 12px; outline: none; font-size: 16px; }
+        .magic-btn { background: var(--royal-purple); color: white; border: none; padding: 0 18px; border-radius: 12px; cursor: pointer; font-size: 20px; }
         
-        .log-list { max-height: 120px; overflow-y: auto; text-align: left; background: #fcfcfc; border-radius: 10px; padding: 5px; }
-        .log-item { display: flex; justify-content: space-between; padding: 8px; border-bottom: 1px solid #f0f0f
+        .log-list { max-height: 130px; overflow-y: auto; text-align: left; background: #fafafa; border-radius: 10px; padding: 5px; }
+        .log-item { display: flex; justify-content: space-between; padding: 8px; border-bottom: 1px solid #f0f0f0; font-size: 13px; }
+        .del-btn { color: #ffafcc; cursor: pointer; border: none; background: none; font-size: 16px; }
+
+        /* 載入中遮罩 */
+        #loading-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255,255,255,0.9); z-index: 999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+    </style>
+</head>
+<body>
+
+<div id="loading-overlay">
+    <div style="font-size: 60px;">🪄</div>
+    <p style="font-weight: bold;">正在呼喚 2026 雲端閱讀資料...</p>
+    <button onclick="skipSync()" style="margin-top:15px; padding:8px 15px; border-radius:15px; border:1.5px solid #6a5acd; background:white; color:#6a5acd; cursor:pointer;">跳過同步 (使用手機紀錄)</button>
+</div>
+
+<div class="overall-stats">
+    <div class="stat-box">2026 總閱讀：<b id="grand-total">0</b> 本</div>
+    <div class="stat-box">城堡守護獸：<b id="castle-count">0</b> 隻</div>
+</div>
+
+<table class="summary-table">
+    <thead>
+        <tr><th>月份</th><th>進化型態</th><th>數量</th><th>達成率</th></tr>
+    </thead>
+    <tbody id="table-body"></tbody>
+</table>
+
+<div class="grid-container" id="card-grid"></div>
+
+<script>
+    // --- 雲端設定 ---
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwxip4kg0F7D9EJj2vqxdejkSDCcRcSNEzOe8OhBw2PhaCaeqjlQ6SKWUnEoKsXTVmY/exec"; 
+
+    // --- 五階進化配置 ---
+    // 0: 0-10本(蛋), 1: 11-19本(幼), 2: 20-29本(蝶), 3: 30-39本(冠), 4: 40+本(堡)
+    const CONFIG = [
+        { m: 1, name: "一月", animal: "長頸鹿", icons: ["🥚", "🦒", "🦒🎀", "🦒👑", "🦒🏰"] },
+        { m: 2, name: "二月", animal: "狐狸", icons: ["🥚", "🦊", "🦊🎀", "🦊👑", "🦊🏰"] },
+        { m: 3, name: "三月", animal: "狗狗", icons: ["🥚", "🐶", "🐶🎀", "🐕‍🦺👑", "🐕‍🦺🏰"] },
+        { m: 4, name: "四月", animal: "大象", icons: ["🥚", "🐘", "🐘🎀", "🐘👑", "🐘🏰"] },
+        { m: 5, name: "五月", animal: "變色龍", icons: ["🥚", "🦎", "🦎🎀", "🌈🦎", "🌈🏰"] },
+        { m: 6, name: "六月", animal: "腕龍", icons: ["🥚", "🦕", "🦕🎀", "🦕👑", "🦕🏰"] },
+        { m: 7, name: "七月", animal: "貓咪", icons: ["🥚", "🐱", "🐱🎀", "🐈👑", "🐈🏰"] },
+        { m: 8, name: "八月", animal: "暴龍", icons: ["🥚", "🦖", "🦖🎀", "🦖🔥", "🦖🏰"] },
+        { m: 9, name: "九月", animal: "泰迪熊", icons: ["🥚", "🧸", "🧸🎀", "🧸👑", "🧸🏰"] },
+        { m: 10, name: "十月", animal: "兔子", icons: ["🥚", "🐰", "🐰🎀", "🐇🌙", "🐇🏰"] },
+        { m: 11, name: "十一月", animal: "鴨子", icons: ["🥚", "🐥", "🐥🎀", "🦆👑", "🦆🏰"] },
+        { m: 12, name: "十二月", animal: "老虎", icons: ["🥚", "🐯", "🐯🎀", "🐯👑", "🐯🏰"] }
+    ];
+
+    let storage = JSON.parse(localStorage.getItem("disney_zoo_2026_v5")) || {};
+
+    function skipSync() {
+        document.getElementById('loading-overlay').style.display = 'none';
+        render();
+    }
+
+    async function syncFromCloud() {
+        if (!SCRIPT_URL || SCRIPT_URL.includes("你的")) { skipSync(); return; }
+        try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 6000); 
+            const response = await fetch(SCRIPT_URL, { signal: controller.signal });
+            const cloudData = await response.json();
+            storage = {}; 
+            cloudData.forEach(item => {
+                const m = parseInt(item.month);
+                if (!storage[m]) storage[m] = [];
+                storage[m].push({ id: item.timestamp, title: item.title });
+            });
+            localStorage.setItem("disney_zoo_2026_v5", JSON.stringify(storage));
+            render();
+        } catch (e) {
+            console.error("同步失敗:", e);
+            render();
+        } finally {
+            document.getElementById('loading-overlay').style.display = 'none';
+        }
+    }
+
+    async function addEntry(m) {
+        const input = document.getElementById(`in-${m}`);
+        const title = input.value;
+        if (!title) return;
+
+        if (!storage[m]) storage[m] = [];
+        storage[m].push({ id: Date.now(), title: title });
+        render();
+        localStorage.setItem("disney_zoo_2026_v5", JSON.stringify(storage));
+        input.value = "";
+
+        if (SCRIPT_URL && !SCRIPT_URL.includes("你的")) {
+            try {
+                await fetch(SCRIPT_URL, {
+                    method: "POST",
+                    mode: "no-cors",
+                    body: JSON.stringify({ month: m, title: title })
+                });
+            } catch (e) { console.log("雲端同步失敗"); }
+        }
+    }
+
+    function removeEntry(m, id) {
+        if(!confirm("確定要移除魔法書嗎？(雲端資料需手動刪除)")) return;
+        storage[m] = storage[m].filter(x => x.id !== id);
+        localStorage.setItem("disney_zoo_2026_v5", JSON.stringify(storage));
+        render();
+    }
+
+    function render() {
+        const grid = document.getElementById("card-grid");
+        const table = document.getElementById("table-body");
+        grid.innerHTML = ""; table.innerHTML = "";
+        let totalAll = 0; let castleCount = 0;
+
+        CONFIG.forEach(cfg => {
+            const list = storage[cfg.m] || [];
+            const count = list.length;
+            totalAll += count;
+
+            // 五階進化判斷
+            let stage = 0; // 0-10
+            if (count >= 11 && count <= 19) stage = 1;
+            else if (count >= 20 && count <= 29) stage = 2;
+            else if (count >= 30 && count <= 39) stage = 3;
+            else if (count >= 40) { stage = 4; castleCount++; }
+
+            const percent = Math.min((count / 40) * 100, 100).toFixed(0);
+
+            // 表格更新
+            table.innerHTML += `<tr><td>${cfg.name}</td><td>${cfg.icons[stage]}</td><td>${count} 本</td><td>${percent}%</td></tr>`;
+
+            // 卡片更新
+            const card = document.createElement("div");
+            card.className = "animal-card";
+            card.innerHTML = `
+                <div class="deco-vine">✨</div>
+                <div class="deco-leaf">🌿</div>
+                <div class="avatar-circle">${cfg.icons[stage]}</div>
+                <div class="month-name">${cfg.name}</div>
+                <div style="font-size:12px; color:var(--vine-green); font-weight:bold;">${cfg.animal}守護區</div>
+                <div class="progress-container"><div class="progress-bar"
