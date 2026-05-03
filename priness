@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>迪士尼公主閱讀魔法-雲端同步版</title>
+    <style>
+        /* 延用之前的樣式，僅微調按鈕狀態 */
+        :root { --disney-blue: #a2d2ff; --disney-pink: #ffafcc; }
+        body { font-family: "Microsoft JhengHei", sans-serif; background: linear-gradient(135deg, #fef9ff 0%, #dcedff 100%); text-align: center; margin: 0; padding: 20px 10px; min-height: 100vh; }
+        .container { max-width: 450px; margin: auto; }
+        .chameleon-container { background: white; width: 100px; height: 100px; line-height: 100px; border-radius: 50%; margin: 0 auto 10px; font-size: 50px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .progress-box { background: #eee; border-radius: 20px; margin: 10px auto; width: 80%; height: 12px; overflow: hidden; }
+        .bar { height: 100%; background: linear-gradient(to right, #ffafcc, #a2d2ff); width: 0%; transition: 0.5s; }
+        .input-group { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        input { padding: 12px; border-radius: 10px; border: 1px solid #ddd; margin: 5px 0; width: 90%; font-size: 16px; }
+        .rating-group { margin: 15px 0; }
+        .rating-group label { font-size: 24px; cursor: pointer; padding: 5px 10px; }
+        input[type="radio"] { display: none; }
+        input[type="radio"]:checked + label { background: #fff0f5; border-radius: 10px; transform: scale(1.2); display: inline-block; }
+        button.add-btn { background: linear-gradient(45deg, #ffafcc, #bde0fe); color: white; border: none; padding: 12px; width: 95%; border-radius: 25px; font-weight: bold; cursor: pointer; }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+        .record-card { background: white; padding: 12px; border-radius: 12px; margin-top: 10px; display: flex; align-items: center; text-align: left; box-shadow: 0 2px 5px rgba(0,0,0,0.03); border-left: 4px solid var(--disney-pink); }
+        .info { flex-grow: 1; margin-left: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>✨ 雲端魔法紀錄書</h1>
+    <div class="chameleon-container" id="pet">🥚</div>
+    <div class="progress-box"><div class="bar" id="bar"></div></div>
+    <p>🌟 魔法星：<span id="stars">0</span> | 已讀：<span id="count">0</span> 本</p>
+
+    <div class="input-group">
+        <input type="text" id="bookName" placeholder="📖 書名">
+        <input type="date" id="date">
+        <div class="rating-group">
+            <input type="radio" name="rating" id="r1" value="😍" checked><label for="r1">😍</label>
+            <input type="radio" name="rating" id="r2" value="😊"><label for="r2">😊</label>
+            <input type="radio" name="rating" id="r3" value="😐"><label for="r3">😐</label>
+        </div>
+        <button id="submitBtn" class="add-btn" onclick="addBook()">🪄 傳送魔法到雲端</button>
+    </div>
+
+    <div id="list"></div>
+</div>
+
+<script>
+    // 請在這裡貼上你的 Google Apps Script 網址
+    const CLOUD_URL = "YOUR_GOOGLE_SCRIPT_URL";
+
+    let books = JSON.parse(localStorage.getItem("disney_books")) || [];
+
+    function updateUI() {
+        document.getElementById("count").innerText = books.length;
+        document.getElementById("stars").innerText = books.length * 10;
+        let progress = ((books.length % 20) / 20) * 100;
+        document.getElementById("bar").style.width = (books.length > 0 && books.length % 20 === 0 ? 100 : progress) + "%";
+        
+        let pet = "🥚";
+        if (books.length >= 5) pet = "🦎";
+        if (books.length >= 20) pet = "👑";
+        document.getElementById("pet").innerText = pet;
+
+        let listHtml = "";
+        books.slice().reverse().forEach(b => {
+            listHtml += `<div class="record-card"><span>${b.rating}</span><div class="info"><b>${b.name}</b><br><small>${b.date}</small></div></div>`;
+        });
+        document.getElementById("list").innerHTML = listHtml;
+    }
+
+    async function addBook() {
+        const name = document.getElementById("bookName").value;
+        const date = document.getElementById("date").value || new Date().toISOString().split("T")[0];
+        const rating = document.querySelector('input[name="rating"]:checked').value;
+        const btn = document.getElementById("submitBtn");
+
+        if (!name) return alert("請輸入書名！");
+
+        // 1. 本地儲存 (確保離線也能看)
+        const newBook = { name, date, rating };
+        books.push(newBook);
+        localStorage.setItem("disney_books", JSON.stringify(books));
+        
+        // 2. 傳送到雲端
+        btn.disabled = true;
+        btn.innerText = "⏳ 魔法傳送中...";
+        
+        try {
+            await fetch(CLOUD_URL, {
+                method: "POST",
+                body: JSON.stringify(newBook)
+            });
+            alert("✨ 魔法已同步到雲端！");
+        } catch (e) {
+            alert("☁️ 雲端同步失敗，但已存在手機裡囉！");
+        } finally {
+            btn.disabled = false;
+            btn.innerText = "🪄 傳送魔法到雲端";
+            document.getElementById("bookName").value = "";
+            updateUI();
+        }
+    }
+
+    document.getElementById("date").valueAsDate = new Date();
+    updateUI();
+</script>
+
+</body>
+</html>
