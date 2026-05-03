@@ -48,7 +48,7 @@
 
 <script>
     // 請在這裡貼上你的 Google Apps Script 網址
-    const CLOUD_URL = "YOUR_GOOGLE_SCRIPT_URL";
+    const CLOUD_URL = "https://script.google.com/macros/s/AKfycbwxip4kg0F7D9EJj2vqxdejkSDCcRcSNEzOe8OhBw2PhaCaeqjlQ6SKWUnEoKsXTVmY/exec";
 
     let books = JSON.parse(localStorage.getItem("disney_books")) || [];
 
