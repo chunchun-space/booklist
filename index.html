@@ -3,108 +3,249 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>迪士尼公主閱讀魔法-雲端同步版</title>
+    <title>2026 皇家閱讀森林紀錄</title>
     <style>
-        /* 延用之前的樣式，僅微調按鈕狀態 */
-        :root { --disney-blue: #a2d2ff; --disney-pink: #ffafcc; }
-        body { font-family: "Microsoft JhengHei", sans-serif; background: linear-gradient(135deg, #fef9ff 0%, #dcedff 100%); text-align: center; margin: 0; padding: 20px 10px; min-height: 100vh; }
-        .container { max-width: 450px; margin: auto; }
-        .chameleon-container { background: white; width: 100px; height: 100px; line-height: 100px; border-radius: 50%; margin: 0 auto 10px; font-size: 50px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        .progress-box { background: #eee; border-radius: 20px; margin: 10px auto; width: 80%; height: 12px; overflow: hidden; }
-        .bar { height: 100%; background: linear-gradient(to right, #ffafcc, #a2d2ff); width: 0%; transition: 0.5s; }
-        .input-group { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        input { padding: 12px; border-radius: 10px; border: 1px solid #ddd; margin: 5px 0; width: 90%; font-size: 16px; }
-        .rating-group { margin: 15px 0; }
-        .rating-group label { font-size: 24px; cursor: pointer; padding: 5px 10px; }
+        :root {
+            --disney-pink: #ffafcc;
+            --disney-blue: #a2d2ff;
+            --gold: #ffb700;
+        }
+
+        body {
+            font-family: "Microsoft JhengHei", sans-serif;
+            background: linear-gradient(135deg, #fef9ff 0%, #e0f2ff 100%);
+            margin: 0;
+            padding: 20px 15px;
+            color: #444;
+            min-height: 100vh;
+        }
+
+        .container { max-width: 500px; margin: auto; }
+
+        /* 進化狀態區 */
+        .pet-stage {
+            background: white;
+            width: 140px;
+            height: 140px;
+            line-height: 140px;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            font-size: 70px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+
+        .stats-info { margin-bottom: 20px; text-align: center; }
+        .level-tag { background: var(--disney-pink); color: white; padding: 2px 12px; border-radius: 15px; font-size: 14px; }
+
+        /* 輸入區 */
+        .input-card {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        .rating-box {
+            display: flex;
+            justify-content: space-around;
+            margin: 10px 0 20px;
+        }
+
+        .rating-box label { font-size: 30px; cursor: pointer; transition: 0.2s; opacity: 0.4; }
         input[type="radio"] { display: none; }
-        input[type="radio"]:checked + label { background: #fff0f5; border-radius: 10px; transform: scale(1.2); display: inline-block; }
-        button.add-btn { background: linear-gradient(45deg, #ffafcc, #bde0fe); color: white; border: none; padding: 12px; width: 95%; border-radius: 25px; font-weight: bold; cursor: pointer; }
-        button:disabled { background: #ccc; cursor: not-allowed; }
-        .record-card { background: white; padding: 12px; border-radius: 12px; margin-top: 10px; display: flex; align-items: center; text-align: left; box-shadow: 0 2px 5px rgba(0,0,0,0.03); border-left: 4px solid var(--disney-pink); }
-        .info { flex-grow: 1; margin-left: 10px; }
+        input[type="radio"]:checked + label { opacity: 1; transform: scale(1.3); }
+
+        .add-btn {
+            background: linear-gradient(45deg, #ffafcc, #bde0fe);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 15px;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 175, 204, 0.4);
+        }
+
+        /* 月份分類清單樣式 */
+        .month-section { margin-top: 25px; text-align: left; }
+        .month-title {
+            font-size: 18px;
+            color: #6a5acd;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .book-item {
+            background: white;
+            padding: 12px 15px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+
+        .book-emoji { font-size: 20px; margin-right: 12px; }
+        .book-content { flex-grow: 1; }
+        .book-name { font-size: 16px; font-weight: 500; display: block; }
+        .book-date { font-size: 12px; color: #999; }
+
+        .delete-icon {
+            color: #ffcccc;
+            cursor: pointer;
+            font-size: 20px;
+            padding: 5px;
+            transition: 0.3s;
+        }
+        .delete-icon:hover { color: #ff5252; }
+
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>✨ 雲端魔法紀錄書</h1>
-    <div class="chameleon-container" id="pet">🥚</div>
-    <div class="progress-box"><div class="bar" id="bar"></div></div>
-    <p>🌟 魔法星：<span id="stars">0</span> | 已讀：<span id="count">0</span> 本</p>
+    <h2 style="text-align:center; color: #6a5acd;">👑 2026 皇家閱讀紀錄</h2>
 
-    <div class="input-group">
-        <input type="text" id="bookName" placeholder="📖 書名">
-        <input type="date" id="date">
-        <div class="rating-group">
-            <input type="radio" name="rating" id="r1" value="😍" checked><label for="r1">😍</label>
-            <input type="radio" name="rating" id="r2" value="😊"><label for="r2">😊</label>
-            <input type="radio" name="rating" id="r3" value="😐"><label for="r3">😐</label>
-        </div>
-        <button id="submitBtn" class="add-btn" onclick="addBook()">🪄 傳送魔法到雲端</button>
+    <div class="pet-stage" id="pet">🥚</div>
+    <div class="stats-info">
+        <span class="level-tag" id="levelName">準備孵化中</span>
+        <p>2026 總閱讀量：<b id="totalCount">0</b> 本</p>
     </div>
 
-    <div id="list"></div>
+    <div class="input-card">
+        <input type="text" id="bookName" placeholder="輸入今天讀的書名...">
+        <input type="date" id="bookDate">
+        
+        <div class="rating-box">
+            <input type="radio" name="rate" id="r1" value="😍" checked><label for="r1">😍</label>
+            <input type="radio" name="rate" id="r2" value="😊"><label for="r2">😊</label>
+            <input type="radio" name="rate" id="r3" value="😐"><label for="r3">😐</label>
+        </div>
+
+        <button class="add-btn" onclick="saveBook()">🪄 施展魔法紀錄</button>
+    </div>
+
+    <div id="historyList"></div>
 </div>
 
 <script>
-    // 請在這裡貼上你的 Google Apps Script 網址
-    const CLOUD_URL = "https://script.google.com/macros/s/AKfycbwxip4kg0F7D9EJj2vqxdejkSDCcRcSNEzOe8OhBw2PhaCaeqjlQ6SKWUnEoKsXTVmY/exec";
+    // 10種階段的動物進化清單
+    const STAGES = [
+        { threshold: 0, emoji: "🥚", name: "平凡的蛋" },
+        { threshold: 5, emoji: "🐣", name: "初生萌芽" },
+        { threshold: 15, emoji: "🐥", name: "愛書小雞" },
+        { threshold: 30, emoji: "🐰", name: "躍進萌兔" },
+        { threshold: 50, emoji: "🦊", name: "智慧靈狐" },
+        { threshold: 75, emoji: "🦄", name: "夢幻獨角獸" },
+        { threshold: 100, emoji: "🦁", name: "勇敢獅王" },
+        { threshold: 130, emoji: "🦉", name: "博學夜梟" },
+        { threshold: 170, emoji: "👑🦎", name: "變色龍女王" },
+        { threshold: 220, emoji: "🌈🐲", name: "終極幻彩龍" }
+    ];
 
-    let books = JSON.parse(localStorage.getItem("disney_books")) || [];
+    let myBooks = JSON.parse(localStorage.getItem("2026_reading_logs")) || [];
 
-    function updateUI() {
-        document.getElementById("count").innerText = books.length;
-        document.getElementById("stars").innerText = books.length * 10;
-        let progress = ((books.length % 20) / 20) * 100;
-        document.getElementById("bar").style.width = (books.length > 0 && books.length % 20 === 0 ? 100 : progress) + "%";
-        
-        let pet = "🥚";
-        if (books.length >= 5) pet = "🦎";
-        if (books.length >= 20) pet = "👑";
-        document.getElementById("pet").innerText = pet;
-
-        let listHtml = "";
-        books.slice().reverse().forEach(b => {
-            listHtml += `<div class="record-card"><span>${b.rating}</span><div class="info"><b>${b.name}</b><br><small>${b.date}</small></div></div>`;
-        });
-        document.getElementById("list").innerHTML = listHtml;
-    }
-
-    async function addBook() {
+    function saveBook() {
         const name = document.getElementById("bookName").value;
-        const date = document.getElementById("date").value || new Date().toISOString().split("T")[0];
-        const rating = document.querySelector('input[name="rating"]:checked').value;
-        const btn = document.getElementById("submitBtn");
+        const date = document.getElementById("bookDate").value;
+        const rate = document.querySelector('input[name="rate"]:checked').value;
 
-        if (!name) return alert("請輸入書名！");
+        if (!name) return; // 不再彈出 alert，改為直接不動作或可以增加紅色框提示
 
-        // 1. 本地儲存 (確保離線也能看)
-        const newBook = { name, date, rating };
-        books.push(newBook);
-        localStorage.setItem("disney_books", JSON.stringify(books));
+        const newEntry = {
+            id: Date.now(),
+            name: name,
+            date: date || new Date().toISOString().split('T')[0],
+            rate: rate
+        };
+
+        myBooks.push(newEntry);
+        localStorage.setItem("2026_reading_logs", JSON.stringify(myBooks));
         
-        // 2. 傳送到雲端
-        btn.disabled = true;
-        btn.innerText = "⏳ 魔法傳送中...";
-        
-        try {
-            await fetch(CLOUD_URL, {
-                method: "POST",
-                body: JSON.stringify(newBook)
-            });
-            alert("✨ 魔法已同步到雲端！");
-        } catch (e) {
-            alert("☁️ 雲端同步失敗，但已存在手機裡囉！");
-        } finally {
-            btn.disabled = false;
-            btn.innerText = "🪄 傳送魔法到雲端";
-            document.getElementById("bookName").value = "";
-            updateUI();
-        }
+        document.getElementById("bookName").value = "";
+        renderUI();
     }
 
-    document.getElementById("date").valueAsDate = new Date();
-    updateUI();
+    function deleteBook(id) {
+        myBooks = myBooks.filter(b => b.id !== id);
+        localStorage.setItem("2026_reading_logs", JSON.stringify(myBooks));
+        renderUI();
+    }
+
+    function renderUI() {
+        // 1. 更新統計與進化
+        const count = myBooks.length;
+        document.getElementById("totalCount").innerText = count;
+
+        let currentStage = STAGES[0];
+        for (let i = STAGES.length - 1; i >= 0; i--) {
+            if (count >= STAGES[i].threshold) {
+                currentStage = STAGES[i];
+                break;
+            }
+        }
+        document.getElementById("pet").innerText = currentStage.emoji;
+        document.getElementById("levelName").innerText = currentStage.name;
+
+        // 2. 按月份分類處理
+        const historyDiv = document.getElementById("historyList");
+        historyDiv.innerHTML = "";
+
+        // 按照日期排序（新的在上面）
+        const sortedBooks = [...myBooks].sort((a, b) => b.date.localeCompare(a.date));
+
+        const months = {};
+        sortedBooks.forEach(book => {
+            const m = book.date.substring(0, 7); // 取得 2026-01
+            if (!months[m]) months[m] = [];
+            months[m].push(book);
+        });
+
+        // 產出 HTML
+        Object.keys(months).sort((a, b) => b.localeCompare(a)).forEach(m => {
+            const monthTitle = m.split('-')[1] + "月";
+            const yearTitle = m.split('-')[0] + "年 ";
+            
+            let sectionHtml = `<div class="month-section">
+                <div class="month-title">${yearTitle}${monthTitle}</div>`;
+            
+            months[m].forEach(book => {
+                sectionHtml += `
+                    <div class="book-item">
+                        <div class="book-emoji">${book.rate}</div>
+                        <div class="book-content">
+                            <span class="book-name">${book.name}</span>
+                            <span class="book-date">${book.date}</span>
+                        </div>
+                        <div class="delete-icon" onclick="deleteBook(${book.id})">✕</div>
+                    </div>
+                `;
+            });
+            sectionHtml += `</div>`;
+            historyDiv.innerHTML += sectionHtml;
+        });
+    }
+
+    // 預設日期
+    document.getElementById("bookDate").valueAsDate = new Date();
+    renderUI();
 </script>
 
 </body>
