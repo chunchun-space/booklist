@@ -192,30 +192,33 @@
             body: JSON.stringify({ month: m, title: title, rating: currentRating })
         });
     }
-
-// 替換 HTML 裡的 removeEntry 函式
 async function removeEntry(m, id) {
     if(!confirm("確定要永久刪除這本魔法書嗎？\n(這會同時移除雲端與本地紀錄)")) return;
     
-    // 1. 先從本地移除
-    storage[m] = storage[m].filter(x => x.id !== id);
-    localStorage.setItem("disney_zoo_2026_v6", JSON.stringify(storage));
+    // 1. 先從本地 storage 移除 (讓使用者感覺反應很快)
+    if (storage[m]) {
+        storage[m] = storage[m].filter(x => x.id.toString() !== id.toString());
+        localStorage.setItem("disney_zoo_v6", JSON.stringify(storage));
+    }
     render();
 
-    // 2. 通知雲端刪除
+    // 2. 發送刪除指令到雲端
     if (SCRIPT_URL && !SCRIPT_URL.includes("你的")) {
         try {
+            // 使用 POST 傳送刪除指令
             await fetch(SCRIPT_URL, {
                 method: "POST",
-                mode: "no-cors",
+                mode: "no-cors", // 必須使用 no-cors 以避開瀏覽器攔截
                 body: JSON.stringify({ 
                     action: "delete", 
                     id: id 
-                })
+                }),
+                keepalive: true // 確保請求完成
             });
-            console.log("雲端同步刪除成功");
+            console.log("刪除指令已送出");
         } catch (e) {
-            console.error("雲端刪除失敗，請檢查網路");
+            console.error("雲端同步失敗");
+            alert("雲端刪除失敗，請檢查網路連線");
         }
     }
 }
