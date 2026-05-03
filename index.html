@@ -9,9 +9,8 @@
             --royal-purple: #7851a9;
             --magic-gold: #ffcf40;
             --vine-green: #008080;
-            --soft-pink: #ffc0cb;
-            --bg-color: #fdfaf5;
             --border-color: #ff7f50;
+            --bg-color: #f8fafc;
         }
 
         body {
@@ -20,106 +19,78 @@
             margin: 0; padding: 15px;
         }
 
-        /* 年度總覽區 */
-        .header-stats {
+        /* 頂部數據儀表板 */
+        .dashboard {
             display: flex; justify-content: space-around;
-            background: white; border-radius: 25px; padding: 20px;
+            background: white; border-radius: 20px; padding: 20px;
             margin-bottom: 30px; border: 3px solid var(--magic-gold);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            box-shadow: 0 10px 15px rgba(0,0,0,0.05);
         }
-        .header-stats b { font-size: 24px; color: var(--royal-purple); }
+        .dash-item { text-align: center; }
+        .dash-item b { font-size: 28px; color: var(--royal-purple); display: block; }
 
-        /* 總覽表格 */
-        .summary-table {
-            width: 100%; background: white; border-collapse: collapse;
-            border-radius: 20px; overflow: hidden; margin-bottom: 40px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-        }
-        .summary-table th { background: var(--royal-purple); color: white; padding: 12px; }
-        .summary-table td { text-align: center; padding: 10px; border-bottom: 1px solid #eee; }
-
-        /* 卡片佈局 */
+        /* 卡片區域 */
         .grid-container {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 70px 25px; padding-top: 50px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 80px 25px; padding-top: 60px;
         }
 
         .animal-card {
-            background: white; border-radius: 40px; border: 4px solid white;
-            outline: 2.5px solid var(--border-color); position: relative;
-            padding: 25px; text-align: center; box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+            background: white; border-radius: 35px; border: 4px solid white;
+            outline: 3px solid var(--border-color); position: relative;
+            padding: 25px; text-align: center; box-shadow: 0 15px 25px rgba(0,0,0,0.08);
         }
 
-        /* 五階大圖示 */
+        /* 五階大頭像 */
         .avatar-circle {
             width: 130px; height: 130px; background: white;
-            border: 5px solid var(--vine-green); border-radius: 50%;
-            position: absolute; top: -75px; left: 50%; transform: translateX(-50%);
+            border: 6px solid var(--vine-green); border-radius: 50%;
+            position: absolute; top: -80px; left: 50%; transform: translateX(-50%);
             display: flex; align-items: center; justify-content: center;
-            font-size: 80px; box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            font-size: 80px; box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
 
-        .month-name { font-size: 26px; font-weight: bold; color: var(--royal-purple); margin-top: 60px; }
+        .month-name { font-size: 28px; font-weight: bold; color: var(--royal-purple); margin-top: 55px; }
         
-        /* 進度條 */
-        .progress-box {
-            background: #eee; height: 18px; border-radius: 10px;
-            margin: 20px 0; overflow: hidden; border: 1px solid #ddd;
-        }
-        .bar { height: 100%; background: linear-gradient(90deg, #ff7f50, #ff69b4); width: 0%; transition: 1s; }
+        /* 達標提示與進度條 */
+        .goal-hint { background: #fff8e1; color: #d84315; font-size: 14px; font-weight: bold; padding: 8px; border-radius: 12px; margin: 10px 0; }
+        .progress-box { background: #eee; height: 20px; border-radius: 10px; margin: 15px 0; overflow: hidden; border: 1px solid #ddd; }
+        .bar { height: 100%; background: linear-gradient(90deg, #ff7f50, #ff69b4, #7851a9); transition: 1s; width: 0%; }
 
-        /* 三級評價選擇器 */
-        .rating-picker {
-            display: flex; justify-content: center; gap: 15px; margin-bottom: 15px;
-        }
-        .rating-btn {
-            font-size: 24px; cursor: pointer; opacity: 0.3; transition: 0.3s;
-        }
-        .rating-btn.active { opacity: 1; transform: scale(1.2); }
+        /* 三級表情選擇器 */
+        .rating-picker { display: flex; justify-content: center; gap: 20px; margin: 15px 0; }
+        .rating-btn { font-size: 30px; cursor: pointer; opacity: 0.2; transition: 0.3s; filter: grayscale(1); }
+        .rating-btn.active { opacity: 1; transform: scale(1.3); filter: grayscale(0); }
 
-        /* 輸入區 */
-        .input-group { display: flex; gap: 8px; margin-bottom: 15px; }
-        input { flex: 1; padding: 12px; border-radius: 15px; border: 1.5px solid #ddd; font-size: 16px; }
+        /* 輸入與列表 */
+        .input-group { display: flex; gap: 10px; margin-bottom: 15px; }
+        input { flex: 1; padding: 12px; border-radius: 15px; border: 2px solid #eee; font-size: 16px; outline: none; }
         .add-btn { background: var(--royal-purple); color: white; border: none; padding: 0 20px; border-radius: 15px; cursor: pointer; font-size: 22px; }
+        
+        .log-container { max-height: 150px; overflow-y: auto; text-align: left; background: #f9f9f9; border-radius: 15px; padding: 10px; }
+        .log-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; font-size: 15px; }
+        .del-btn { color: #fca5a5; cursor: pointer; border: none; background: none; font-size: 18px; }
 
-        /* 紀錄列表 */
-        .log-container {
-            max-height: 140px; overflow-y: auto; text-align: left;
-            background: #f9f9f9; border-radius: 15px; padding: 8px;
-        }
-        .log-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; font-size: 14px; }
-        .del-btn { color: #ffafcc; cursor: pointer; border: none; background: none; }
-
-        /* 同步狀態提示 */
-        #sync-msg {
-            position: fixed; top: 10px; right: 10px; padding: 8px 15px;
-            background: rgba(0,0,0,0.7); color: white; border-radius: 20px;
-            font-size: 12px; display: none; z-index: 1000;
-        }
+        #sync-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.9); z-index:999; display:flex; flex-direction:column; align-items:center; justify-content:center; }
     </style>
 </head>
 <body>
 
-<div id="sync-msg">魔法同步中...</div>
-
-<div class="header-stats">
-    <div>2026 年度閱讀量：<b id="total-val">0</b> 本</div>
-    <div>城堡守護獸：<b id="castle-val">0</b> 隻</div>
+<div id="sync-overlay">
+    <div style="font-size: 60px;">🪄</div>
+    <p>魔法數據同步中...</p>
 </div>
 
-<table class="summary-table">
-    <thead>
-        <tr><th>月份</th><th>進化狀態</th><th>本數</th><th>達成率</th></tr>
-    </thead>
-    <tbody id="table-body"></tbody>
-</table>
+<div class="dashboard">
+    <div class="dash-item">2026 總閱讀：<b id="grand-total">0</b> 本</div>
+    <div class="dash-item">城堡守護獸：<b id="castle-count">0</b> 隻</div>
+</div>
 
-<div class="grid-container" id="card-root"></div>
+<div class="grid-container" id="grid-root"></div>
 
 <script>
-    // --- 請填入部署後的網址 ---
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyu3N_0gkcu4oXBmOm-Njqb-qMoYEbVRszXB4qepSYd8GTwjasbXqMmise8iFOohH51/exec"; 
-
     const CONFIG = [
         { m: 1, name: "一月", animal: "長頸鹿", icons: ["🥚", "🦒", "🦒🎀", "🦒👑", "🦒🏰"] },
         { m: 2, name: "二月", animal: "狐狸", icons: ["🥚", "🦊", "🦊🎀", "🦊👑", "🦊🏰"] },
@@ -128,162 +99,108 @@
         { m: 5, name: "五月", animal: "變色龍", icons: ["🥚", "🦎", "🦎🎀", "🌈🦎", "🌈🏰"] },
         { m: 6, name: "六月", animal: "腕龍", icons: ["🥚", "🦕", "🦕🎀", "🦕👑", "🦕🏰"] },
         { m: 7, name: "七月", animal: "貓咪", icons: ["🥚", "🐱", "🐱🎀", "🐈👑", "🐈🏰"] },
-        { m: 8, name: "八月", animal: "暴龍", icons: ["🥚", "🦖", "🦖🎀", "🦖🔥", "🦖🏰"] },
+        { m: 8, name: "八月", animal: "暴龍", icons: ["🥚", "Rex", "🦖🎀", "🦖🔥", "🦖🏰"] },
         { m: 9, name: "九月", animal: "泰迪熊", icons: ["🥚", "🧸", "🧸🎀", "🧸👑", "🧸🏰"] },
         { m: 10, name: "十月", animal: "兔子", icons: ["🥚", "🐰", "🐰🎀", "🐇🌙", "🐇🏰"] },
         { m: 11, name: "十一月", animal: "鴨子", icons: ["🥚", "🐥", "🐥🎀", "🦆👑", "🦆🏰"] },
         { m: 12, name: "十二月", animal: "老虎", icons: ["🥚", "🐯", "🐯🎀", "🐯👑", "🐯🏰"] }
     ];
 
-    let storage = JSON.parse(localStorage.getItem("disney_zoo_v6")) || {};
-    let currentRating = "😊"; // 預設滿意度
+    let storage = JSON.parse(localStorage.getItem("disney_zoo_v7")) || {};
+    let tempRating = "💛";
 
-// 在 HTML 的 syncData 函式中替換這段
     async function syncData() {
-        if (!SCRIPT_URL || SCRIPT_URL.includes("你的")) { render(); return; }
-        document.getElementById('sync-msg').style.display = 'block';
+        if (!SCRIPT_URL || SCRIPT_URL.includes("您的")) { render(); return; }
         try {
             const res = await fetch(SCRIPT_URL);
             const cloudData = await res.json();
-            
-            // 重要：同步時，我們先以雲端資料重新建立該月份的清單
-            // 這樣在雲端刪除的東西，手機重新整理後才會真的消失
             let newStorage = {};
             cloudData.forEach(item => {
                 const m = parseInt(item.month);
                 if (!newStorage[m]) newStorage[m] = [];
-                newStorage[m].push({ 
-                    id: item.timestamp, 
-                    title: item.title, 
-                    rating: item.rating 
-                });
+                newStorage[m].push({ id: item.timestamp, title: item.title, rating: item.rating });
             });
-            
-            storage = newStorage; // 直接覆蓋本地，確保兩邊完全同步
-            localStorage.setItem("disney_zoo_v6", JSON.stringify(storage));
-        } catch (e) { 
-            console.log("離線模式，使用本地紀錄"); 
-        } finally {
-            document.getElementById('sync-msg').style.display = 'none';
+            storage = newStorage;
+            localStorage.setItem("disney_zoo_v7", JSON.stringify(storage));
+        } catch (e) { console.log("Offline mode"); }
+        finally {
+            document.getElementById('sync-overlay').style.display = 'none';
             render();
         }
     }
 
-    // 評分切換
-    function setRating(m, rating, el) {
-        currentRating = rating;
-        const btns = el.parentElement.querySelectorAll('.rating-btn');
-        btns.forEach(b => b.classList.remove('active'));
+    function setRating(m, r, el) {
+        tempRating = r;
+        el.parentElement.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('active'));
         el.classList.add('active');
     }
 
     async function addEntry(m) {
         const input = document.getElementById(`in-${m}`);
-        const title = input.value.trim();
-        if (!title) return;
-
-        const timestamp = Date.now();
+        if (!input.value.trim()) return;
+        const entry = { id: Date.now().toString(), title: input.value.trim(), rating: tempRating };
         if (!storage[m]) storage[m] = [];
-        const entry = { id: timestamp, title, rating: currentRating };
-        
         storage[m].push(entry);
-        localStorage.setItem("disney_zoo_v6", JSON.stringify(storage));
+        localStorage.setItem("disney_zoo_v7", JSON.stringify(storage));
         render();
         input.value = "";
-
-        // 發送雲端 (不阻斷)
-        fetch(SCRIPT_URL, {
-            method: "POST",
-            mode: "no-cors",
-            body: JSON.stringify({ month: m, title: title, rating: currentRating })
-        });
+        fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify({ month: m, title: entry.title, rating: tempRating }) });
     }
-async function removeEntry(m, id) {
-    if(!confirm("確定要永久刪除這本魔法書嗎？\n(這會同時移除雲端與本地紀錄)")) return;
-    
-    // 1. 先從本地 storage 移除 (讓使用者感覺反應很快)
-    if (storage[m]) {
+
+    async function removeEntry(m, id) {
+        if(!confirm("永久刪除這本書嗎？")) return;
         storage[m] = storage[m].filter(x => x.id.toString() !== id.toString());
-        localStorage.setItem("disney_zoo_v6", JSON.stringify(storage));
+        localStorage.setItem("disney_zoo_v7", JSON.stringify(storage));
+        render();
+        fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify({ action: "delete", id: id }) });
     }
-    render();
-
-    // 2. 發送刪除指令到雲端
-    if (SCRIPT_URL && !SCRIPT_URL.includes("你的")) {
-        try {
-            // 使用 POST 傳送刪除指令
-            await fetch(SCRIPT_URL, {
-                method: "POST",
-                mode: "no-cors", // 必須使用 no-cors 以避開瀏覽器攔截
-                body: JSON.stringify({ 
-                    action: "delete", 
-                    id: id 
-                }),
-                keepalive: true // 確保請求完成
-            });
-            console.log("刪除指令已送出");
-        } catch (e) {
-            console.error("雲端同步失敗");
-            alert("雲端刪除失敗，請檢查網路連線");
-        }
-    }
-}
 
     function render() {
-        const grid = document.getElementById("card-root");
-        const table = document.getElementById("table-body");
-        grid.innerHTML = ""; table.innerHTML = "";
-        let totalAll = 0; let castleCount = 0;
+        const root = document.getElementById("grid-root");
+        root.innerHTML = "";
+        let grandTotal = 0, castleCount = 0;
 
         CONFIG.forEach(cfg => {
             const list = storage[cfg.m] || [];
             const count = list.length;
-            totalAll += count;
+            grandTotal += count;
 
-            // 五階進化
-            let stage = 0;
-            if (count >= 11 && count <= 19) stage = 1;
-            else if (count >= 20 && count <= 29) stage = 2;
-            else if (count >= 30 && count <= 39) stage = 3;
-            else if (count >= 40) { stage = 4; castleCount++; }
+            let stage = 0, next = 11, hint = "";
+            if (count < 11) { stage = 0; next = 11; }
+            else if (count < 20) { stage = 1; next = 20; }
+            else if (count < 30) { stage = 2; next = 30; }
+            else if (count < 40) { stage = 3; next = 40; }
+            else { stage = 4; castleCount++; hint = "✨ 終極城堡達成！"; }
+            
+            if (count < 40) hint = `還差 ${next - count} 本達成進化！`;
+            const percent = Math.min((count / 40) * 100, 100);
 
-            const percent = Math.min((count / 40) * 100, 100).toFixed(0);
-
-            // 更新表格
-            table.innerHTML += `<tr><td>${cfg.name}</td><td>${cfg.icons[stage]}</td><td>${count} 本</td><td>${percent}%</td></tr>`;
-
-            // 更新卡片
             const card = document.createElement("div");
             card.className = "animal-card";
             card.innerHTML = `
                 <div class="avatar-circle">${cfg.icons[stage]}</div>
                 <div class="month-name">${cfg.name}</div>
+                <div style="font-weight:bold; color:var(--vine-green);">目前累積：${count} 本</div>
+                <div class="goal-hint">${hint}</div>
                 <div class="progress-box"><div class="bar" style="width: ${percent}%"></div></div>
                 <div class="rating-picker">
-                    <span class="rating-btn active" onclick="setRating(${cfg.m}, '❤️', this)">❤️</span>
-                    <span class="rating-btn" onclick="setRating(${cfg.m}, '😊', this)">😊</span>
-                    <span class="rating-btn" onclick="setRating(${cfg.m}, '😐', this)">😐</span>
+                    <span class="rating-btn" onclick="setRating(${cfg.m}, '❤️', this)">❤️</span>
+                    <span class="rating-btn active" onclick="setRating(${cfg.m}, '💛', this)">💛</span>
+                    <span class="rating-btn" onclick="setRating(${cfg.m}, '🩶', this)">🩶</span>
                 </div>
                 <div class="input-group">
-                    <input type="text" id="in-${cfg.m}" placeholder="書名...">
+                    <input type="text" id="in-${cfg.m}" placeholder="添加書名...">
                     <button class="add-btn" onclick="addEntry(${cfg.m})">🪄</button>
                 </div>
                 <div class="log-container">
-                    ${list.slice().reverse().map(b => `
-                        <div class="log-item">
-                            <span>${b.rating || '😊'} ${b.title}</span>
-                            <button class="del-btn" onclick="removeEntry(${cfg.m}, ${b.id})">✕</button>
-                        </div>
-                    `).join('')}
+                    ${list.slice().reverse().map(b => `<div class="log-item"><span>${b.rating || '💛'} ${b.title}</span><button class="del-btn" onclick="removeEntry(${cfg.m}, '${b.id}')">✕</button></div>`).join('')}
                 </div>
             `;
-            grid.appendChild(card);
+            root.appendChild(card);
         });
-
-        document.getElementById("total-val").innerText = totalAll;
-        document.getElementById("castle-val").innerText = castleCount;
+        document.getElementById("grand-total").innerText = grandTotal;
+        document.getElementById("castle-count").innerText = castleCount;
     }
-
     window.onload = syncData;
 </script>
 </body>
