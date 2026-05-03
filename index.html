@@ -148,19 +148,40 @@
     // 取得資料
     let storage = JSON.parse(localStorage.getItem("disney_zoo_2026")) || {};
 
-    function addEntry(m) {
-        const input = document.getElementById(`in-${m}`);
-        if (!input.value) return;
-        if (!storage[m]) storage[m] = [];
-        storage[m].push({ id: Date.now(), title: input.value });
-        
-        // 預留雲端同步位置 (之後可在此 fetch Google Script)
-        console.log("準備同步到雲端:", input.value);
-        
-        input.value = "";
-        save();
-    }
+    async function addEntry(m) {
+    const input = document.getElementById(`in-${m}`);
+    const bookTitle = input.value;
+    if (!bookTitle) return;
 
+    // 這裡替換成你部署後得到的 Google Apps Script 網址
+    const scriptURL = "https://script.google.com/macros/s/AKfycbwxip4kg0F7D9EJj2vqxdejkSDCcRcSNEzOe8OhBw2PhaCaeqjlQ6SKWUnEoKsXTVmY/exec";
+
+    // 1. 本地顯示邏輯 (先讓網頁有反應)
+    if (!storage[m]) storage[m] = [];
+    const newBook = { id: Date.now(), title: bookTitle };
+    storage[m].push(newBook);
+    save(); // 呼叫原本的存檔與渲染函式
+    input.value = "";
+
+    // 2. 雲端同步邏輯 (fetch)
+    try {
+        console.log("正在同步到雲端...");
+        const response = await fetch(scriptURL, {
+            method: "POST",
+            mode: "no-cors", // 避免跨網域限制問題
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                month: m,
+                title: bookTitle
+            }),
+        });
+        console.log("雲端同步完成！");
+    } catch (error) {
+        console.error("雲端同步失敗:", error);
+    }
+}
     function removeEntry(m, id) {
         storage[m] = storage[m].filter(x => x.id !== id);
         save();
