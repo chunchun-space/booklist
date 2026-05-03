@@ -116,7 +116,17 @@
 </table>
 
 <div class="grid-container" id="card-grid"></div>
-
+function skipSync() {
+    console.log("手動跳過同步");
+    const overlay = document.getElementById('loading-overlay');
+    if (overlay) overlay.style.display = 'none';
+    
+    // 如果 storage 是空的，嘗試從本地讀取
+    if (Object.keys(storage).length === 0) {
+        storage = JSON.parse(localStorage.getItem("disney_zoo_2026_v5")) || {};
+    }
+    render(); 
+}
 <script>
     // --- 雲端設定 ---
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwxip4kg0F7D9EJj2vqxdejkSDCcRcSNEzOe8OhBw2PhaCaeqjlQ6SKWUnEoKsXTVmY/exec"; 
