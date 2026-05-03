@@ -3,249 +3,242 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2026 皇家閱讀森林紀錄</title>
+    <title>2026 皇家閱讀魔法動物園</title>
     <style>
         :root {
+            --royal-purple: #6a5acd;
+            --magic-gold: #ffd700;
+            --vine-green: #2d6a4f;
             --disney-pink: #ffafcc;
-            --disney-blue: #a2d2ff;
-            --gold: #ffb700;
+            --bg-color: #fdfaf5;
         }
 
         body {
             font-family: "Microsoft JhengHei", sans-serif;
-            background: linear-gradient(135deg, #fef9ff 0%, #e0f2ff 100%);
-            margin: 0;
-            padding: 20px 15px;
-            color: #444;
-            min-height: 100vh;
+            background: var(--bg-color);
+            margin: 0; padding: 10px;
+            color: #333;
         }
 
-        .container { max-width: 500px; margin: auto; }
-
-        /* 進化狀態區 */
-        .pet-stage {
+        /* 1. 頂部閱讀總覽表 (仿養殖介面統計區) */
+        .summary-table {
             background: white;
-            width: 140px;
-            height: 140px;
-            line-height: 140px;
-            border-radius: 50%;
-            margin: 0 auto 15px;
-            font-size: 70px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            border-radius: 20px;
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            overflow: hidden;
+            font-size: 14px;
+        }
+        .summary-table th { background: var(--royal-purple); color: white; padding: 10px; }
+        .summary-table td { padding: 8px; text-align: center; border-bottom: 1px solid #eee; }
+        .summary-table tr:last-child { font-weight: bold; background: #f9f9ff; }
+
+        /* 總結資訊 */
+        .overall-stats {
+            display: flex; justify-content: space-around;
+            padding: 15px; background: white; border-radius: 20px;
+            margin-bottom: 30px; border: 2px solid var(--magic-gold);
+        }
+        .stat-box b { font-size: 20px; color: var(--royal-purple); }
+
+        /* 2. 養殖卡片區 */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 40px 25px;
+            padding-top: 30px;
+        }
+
+        .animal-card {
+            background: white;
+            border-radius: 35px;
+            border: 4px solid white;
+            outline: 2px solid var(--vine-green);
+            position: relative;
+            padding: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
             text-align: center;
         }
 
-        .stats-info { margin-bottom: 20px; text-align: center; }
-        .level-tag { background: var(--disney-pink); color: white; padding: 2px 12px; border-radius: 15px; font-size: 14px; }
-
-        /* 輸入區 */
-        .input-card {
-            background: rgba(255, 255, 255, 0.8);
-            padding: 20px;
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            margin-bottom: 30px;
-        }
-
-        input {
-            width: 100%;
-            padding: 12px;
-            border-radius: 12px;
-            border: 1px solid #ddd;
-            margin-bottom: 10px;
-            box-sizing: border-box;
-            font-size: 16px;
-        }
-
-        .rating-box {
-            display: flex;
-            justify-content: space-around;
-            margin: 10px 0 20px;
-        }
-
-        .rating-box label { font-size: 30px; cursor: pointer; transition: 0.2s; opacity: 0.4; }
-        input[type="radio"] { display: none; }
-        input[type="radio"]:checked + label { opacity: 1; transform: scale(1.3); }
-
-        .add-btn {
-            background: linear-gradient(45deg, #ffafcc, #bde0fe);
-            color: white;
-            border: none;
-            width: 100%;
-            padding: 15px;
-            border-radius: 30px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 5px 15px rgba(255, 175, 204, 0.4);
-        }
-
-        /* 月份分類清單樣式 */
-        .month-section { margin-top: 25px; text-align: left; }
-        .month-title {
-            font-size: 18px;
-            color: #6a5acd;
-            border-bottom: 2px solid #ddd;
-            padding-bottom: 5px;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-
-        .book-item {
+        /* 漂浮蛋/動物圓框 */
+        .avatar-circle {
+            width: 100px; height: 100px;
             background: white;
-            padding: 12px 15px;
-            border-radius: 12px;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            border: 5px solid var(--vine-green);
+            border-radius: 50%;
+            position: absolute;
+            top: -55px; left: 50%;
+            transform: translateX(-50%);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 55px;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+            animation: float 3s ease-in-out infinite;
         }
 
-        .book-emoji { font-size: 20px; margin-right: 12px; }
-        .book-content { flex-grow: 1; }
-        .book-name { font-size: 16px; font-weight: 500; display: block; }
-        .book-date { font-size: 12px; color: #999; }
-
-        .delete-icon {
-            color: #ffcccc;
-            cursor: pointer;
-            font-size: 20px;
-            padding: 5px;
-            transition: 0.3s;
+        @keyframes float {
+            0%, 100% { transform: translate(-50%, 0); }
+            50% { transform: translate(-50%, -15px); }
         }
-        .delete-icon:hover { color: #ff5252; }
+
+        /* 邊框裝飾 */
+        .deco-vine { position: absolute; top: 10px; right: 15px; font-size: 18px; color: var(--magic-gold); }
+        .deco-star { position: absolute; bottom: 10px; left: 15px; font-size: 18px; }
+
+        .month-name { font-size: 22px; font-weight: bold; color: var(--royal-purple); margin-top: 40px; }
+
+        /* 進度條 */
+        .progress-container {
+            background: #eee; height: 12px; border-radius: 6px;
+            margin: 15px 0; overflow: hidden; border: 1px solid #ddd;
+        }
+        .progress-bar { height: 100%; background: linear-gradient(90deg, #ffafcc, #ff85a1); transition: 1s; }
+
+        /* 輸入區塊 */
+        .input-group { display: flex; gap: 8px; margin: 15px 0; }
+        input { flex: 1; border: 1.5px solid #eee; padding: 10px; border-radius: 12px; outline: none; }
+        .magic-btn { background: var(--royal-purple); color: white; border: none; padding: 0 15px; border-radius: 12px; cursor: pointer; }
+
+        /* 紀錄清單 */
+        .log-list { max-height: 120px; overflow-y: auto; text-align: left; background: #fcfcfc; border-radius: 10px; padding: 5px; }
+        .log-item { display: flex; justify-content: space-between; padding: 8px; border-bottom: 1px solid #f0f0f0; font-size: 13px; }
+        .del-btn { color: #ffafcc; cursor: pointer; border: none; background: none; }
 
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2 style="text-align:center; color: #6a5acd;">👑 2026 皇家閱讀紀錄</h2>
-
-    <div class="pet-stage" id="pet">🥚</div>
-    <div class="stats-info">
-        <span class="level-tag" id="levelName">準備孵化中</span>
-        <p>2026 總閱讀量：<b id="totalCount">0</b> 本</p>
-    </div>
-
-    <div class="input-card">
-        <input type="text" id="bookName" placeholder="輸入今天讀的書名...">
-        <input type="date" id="bookDate">
-        
-        <div class="rating-box">
-            <input type="radio" name="rate" id="r1" value="😍" checked><label for="r1">😍</label>
-            <input type="radio" name="rate" id="r2" value="😊"><label for="r2">😊</label>
-            <input type="radio" name="rate" id="r3" value="😐"><label for="r3">😐</label>
-        </div>
-
-        <button class="add-btn" onclick="saveBook()">🪄 施展魔法紀錄</button>
-    </div>
-
-    <div id="historyList"></div>
+<div class="overall-stats">
+    <div class="stat-box">年度總量：<b id="grand-total">0</b> 本</div>
+    <div class="stat-box">已孵化：<b id="hatched-count">0</b> 隻</div>
 </div>
 
+<table class="summary-table">
+    <thead>
+        <tr>
+            <th>月份</th>
+            <th>守護獸</th>
+            <th>數量</th>
+            <th>達成率</th>
+        </tr>
+    </thead>
+    <tbody id="table-body">
+        </tbody>
+</table>
+
+<div class="grid-container" id="card-grid"></div>
+
 <script>
-    // 10種階段的動物進化清單
-    const STAGES = [
-        { threshold: 0, emoji: "🥚", name: "平凡的蛋" },
-        { threshold: 5, emoji: "🐣", name: "初生萌芽" },
-        { threshold: 15, emoji: "🐥", name: "愛書小雞" },
-        { threshold: 30, emoji: "🐰", name: "躍進萌兔" },
-        { threshold: 50, emoji: "🦊", name: "智慧靈狐" },
-        { threshold: 75, emoji: "🦄", name: "夢幻獨角獸" },
-        { threshold: 100, emoji: "🦁", name: "勇敢獅王" },
-        { threshold: 130, emoji: "🦉", name: "博學夜梟" },
-        { threshold: 170, emoji: "👑🦎", name: "變色龍女王" },
-        { threshold: 220, emoji: "🌈🐲", name: "終極幻彩龍" }
+    const CONFIG = [
+        { m: 1, name: "一月", animal: "長頸鹿", icons: ["🥚", "🦒", "🦒👑"] },
+        { m: 2, name: "二月", animal: "狐狸", icons: ["🥚", "🦊", "🦊✨"] },
+        { m: 3, name: "三月", animal: "狗狗", icons: ["🥚", "🐶", "🐕‍🦺🥇"] },
+        { m: 4, name: "四月", animal: "大象", icons: ["🥚", "🐘", "🐘🏰"] },
+        { m: 5, name: "五月", animal: "變色龍", icons: ["🥚", "🦎", "🌈🦎"] },
+        { m: 6, name: "六月", animal: "腕龍", icons: ["🥚", "🦕", "🦕👑"] },
+        { m: 7, name: "七月", animal: "貓咪", icons: ["🥚", "🐱", "🐈✨"] },
+        { m: 8, name: "八月", animal: "暴龍", icons: ["🥚", "🐊", "🦖🔥"] },
+        { m: 9, name: "九月", animal: "泰迪熊", icons: ["🥚", "🧸", "🧸🎀"] },
+        { m: 10, name: "十月", animal: "兔子", icons: ["🥚", "🐰", "🐇🌙"] },
+        { m: 11, name: "十一月", animal: "鴨子", icons: ["🥚", "🐥", "🦆👑"] },
+        { m: 12, name: "十二月", animal: "老虎", icons: ["🥚", "🐯", "🐯❄️"] }
     ];
 
-    let myBooks = JSON.parse(localStorage.getItem("2026_reading_logs")) || [];
+    // 取得資料
+    let storage = JSON.parse(localStorage.getItem("disney_zoo_2026")) || {};
 
-    function saveBook() {
-        const name = document.getElementById("bookName").value;
-        const date = document.getElementById("bookDate").value;
-        const rate = document.querySelector('input[name="rate"]:checked').value;
-
-        if (!name) return; // 不再彈出 alert，改為直接不動作或可以增加紅色框提示
-
-        const newEntry = {
-            id: Date.now(),
-            name: name,
-            date: date || new Date().toISOString().split('T')[0],
-            rate: rate
-        };
-
-        myBooks.push(newEntry);
-        localStorage.setItem("2026_reading_logs", JSON.stringify(myBooks));
+    function addEntry(m) {
+        const input = document.getElementById(`in-${m}`);
+        if (!input.value) return;
+        if (!storage[m]) storage[m] = [];
+        storage[m].push({ id: Date.now(), title: input.value });
         
-        document.getElementById("bookName").value = "";
-        renderUI();
+        // 預留雲端同步位置 (之後可在此 fetch Google Script)
+        console.log("準備同步到雲端:", input.value);
+        
+        input.value = "";
+        save();
     }
 
-    function deleteBook(id) {
-        myBooks = myBooks.filter(b => b.id !== id);
-        localStorage.setItem("2026_reading_logs", JSON.stringify(myBooks));
-        renderUI();
+    function removeEntry(m, id) {
+        storage[m] = storage[m].filter(x => x.id !== id);
+        save();
     }
 
-    function renderUI() {
-        // 1. 更新統計與進化
-        const count = myBooks.length;
-        document.getElementById("totalCount").innerText = count;
+    function save() {
+        localStorage.setItem("disney_zoo_2026", JSON.stringify(storage));
+        render();
+    }
 
-        let currentStage = STAGES[0];
-        for (let i = STAGES.length - 1; i >= 0; i--) {
-            if (count >= STAGES[i].threshold) {
-                currentStage = STAGES[i];
-                break;
-            }
-        }
-        document.getElementById("pet").innerText = currentStage.emoji;
-        document.getElementById("levelName").innerText = currentStage.name;
+    function render() {
+        const grid = document.getElementById("card-grid");
+        const table = document.getElementById("table-body");
+        grid.innerHTML = "";
+        table.innerHTML = "";
 
-        // 2. 按月份分類處理
-        const historyDiv = document.getElementById("historyList");
-        historyDiv.innerHTML = "";
+        let totalBooks = 0;
+        let hatchedCount = 0;
 
-        // 按照日期排序（新的在上面）
-        const sortedBooks = [...myBooks].sort((a, b) => b.date.localeCompare(a.date));
+        CONFIG.forEach(cfg => {
+            const list = storage[cfg.m] || [];
+            const count = list.length;
+            totalBooks += count;
 
-        const months = {};
-        sortedBooks.forEach(book => {
-            const m = book.date.substring(0, 7); // 取得 2026-01
-            if (!months[m]) months[m] = [];
-            months[m].push(book);
-        });
+            // 進化與圖示邏輯
+            let stage = 0; // 0-10本: 蛋
+            if (count >= 11 && count <= 19) stage = 1; // 11-19本: 幼年
+            if (count >= 20) { stage = 2; hatchedCount++; } // 20本: 成年
 
-        // 產出 HTML
-        Object.keys(months).sort((a, b) => b.localeCompare(a)).forEach(m => {
-            const monthTitle = m.split('-')[1] + "月";
-            const yearTitle = m.split('-')[0] + "年 ";
-            
-            let sectionHtml = `<div class="month-section">
-                <div class="month-title">${yearTitle}${monthTitle}</div>`;
-            
-            months[m].forEach(book => {
-                sectionHtml += `
-                    <div class="book-item">
-                        <div class="book-emoji">${book.rate}</div>
-                        <div class="book-content">
-                            <span class="book-name">${book.name}</span>
-                            <span class="book-date">${book.date}</span>
+            const percent = Math.min((count / 20) * 100, 100).toFixed(0);
+
+            // 更新表格
+            table.innerHTML += `
+                <tr>
+                    <td>${cfg.name}</td>
+                    <td>${count >= 11 ? cfg.icons[stage] : "🥚"}</td>
+                    <td>${count} 本</td>
+                    <td>${percent}%</td>
+                </tr>
+            `;
+
+            // 更新卡片
+            const card = document.createElement("div");
+            card.className = "animal-card";
+            card.innerHTML = `
+                <div class="deco-vine">🌙</div>
+                <div class="deco-star">🌿</div>
+                <div class="avatar-circle">${cfg.icons[stage]}</div>
+                <div class="month-name">${cfg.name}</div>
+                <div style="font-size:12px; color:var(--vine-green); font-weight:bold;">${cfg.animal}小窩</div>
+                
+                <div class="progress-container">
+                    <div class="progress-bar" style="width: ${percent}%"></div>
+                </div>
+                <small>成長能量：${count} / 20</small>
+
+                <div class="input-group">
+                    <input type="text" id="in-${cfg.m}" placeholder="添加讀過的書...">
+                    <button class="magic-btn" onclick="addEntry(${cfg.m})">🪄</button>
+                </div>
+
+                <div class="log-list">
+                    ${list.slice().reverse().map(b => `
+                        <div class="log-item">
+                            <span>✨ ${b.title}</span>
+                            <button class="del-btn" onclick="removeEntry(${cfg.m}, ${b.id})">✕</button>
                         </div>
-                        <div class="delete-icon" onclick="deleteBook(${book.id})">✕</div>
-                    </div>
-                `;
-            });
-            sectionHtml += `</div>`;
-            historyDiv.innerHTML += sectionHtml;
+                    `).join('')}
+                </div>
+            `;
+            grid.appendChild(card);
         });
+
+        document.getElementById("grand-total").innerText = totalBooks;
+        document.getElementById("hatched-count").innerText = hatchedCount;
     }
 
-    // 預設日期
-    document.getElementById("bookDate").valueAsDate = new Date();
-    renderUI();
+    render();
 </script>
 
 </body>
