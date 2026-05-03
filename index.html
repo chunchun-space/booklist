@@ -138,7 +138,7 @@
     let storage = JSON.parse(localStorage.getItem("disney_zoo_v6")) || {};
     let currentRating = "😊"; // 預設滿意度
 
-    // 同步雲端資料 (雙向連結)
+// 在 HTML 的 syncData 函式中替換這段
     async function syncData() {
         if (!SCRIPT_URL || SCRIPT_URL.includes("你的")) { render(); return; }
         document.getElementById('sync-msg').style.display = 'block';
@@ -146,18 +146,24 @@
             const res = await fetch(SCRIPT_URL);
             const cloudData = await res.json();
             
-            // 合併邏輯：以 ID 作為唯一值避免重複
+            // 重要：同步時，我們先以雲端資料重新建立該月份的清單
+            // 這樣在雲端刪除的東西，手機重新整理後才會真的消失
+            let newStorage = {};
             cloudData.forEach(item => {
                 const m = parseInt(item.month);
-                if (!storage[m]) storage[m] = [];
-                const exists = storage[m].some(b => b.title === item.title && b.id === item.timestamp);
-                if (!exists) {
-                    storage[m].push({ id: item.timestamp, title: item.title, rating: item.rating });
-                }
+                if (!newStorage[m]) newStorage[m] = [];
+                newStorage[m].push({ 
+                    id: item.timestamp, 
+                    title: item.title, 
+                    rating: item.rating 
+                });
             });
+            
+            storage = newStorage; // 直接覆蓋本地，確保兩邊完全同步
             localStorage.setItem("disney_zoo_v6", JSON.stringify(storage));
-        } catch (e) { console.log("離線模式"); }
-        finally {
+        } catch (e) { 
+            console.log("離線模式，使用本地紀錄"); 
+        } finally {
             document.getElementById('sync-msg').style.display = 'none';
             render();
         }
