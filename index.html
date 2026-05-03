@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2026 皇家閱讀魔法動物園</title>
+    <title>2026 皇家閱讀魔法森林 - 雲端同步版</title>
     <style>
         :root {
             --royal-purple: #6a5acd;
@@ -20,60 +20,41 @@
             color: #333;
         }
 
-        /* 1. 頂部閱讀總覽表 (仿養殖介面統計區) */
+        /* 頂部總覽表 */
         .summary-table {
-            background: white;
-            border-radius: 20px;
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 25px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            overflow: hidden;
-            font-size: 14px;
+            background: white; border-radius: 20px; width: 100%;
+            border-collapse: collapse; margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05); overflow: hidden; font-size: 14px;
         }
-        .summary-table th { background: var(--royal-purple); color: white; padding: 10px; }
-        .summary-table td { padding: 8px; text-align: center; border-bottom: 1px solid #eee; }
-        .summary-table tr:last-child { font-weight: bold; background: #f9f9ff; }
+        .summary-table th { background: var(--royal-purple); color: white; padding: 12px; }
+        .summary-table td { padding: 10px; text-align: center; border-bottom: 1px solid #eee; }
 
-        /* 總結資訊 */
         .overall-stats {
-            display: flex; justify-content: space-around;
-            padding: 15px; background: white; border-radius: 20px;
-            margin-bottom: 30px; border: 2px solid var(--magic-gold);
+            display: flex; justify-content: space-around; padding: 15px;
+            background: white; border-radius: 20px; margin-bottom: 20px;
+            border: 2px solid var(--magic-gold);
         }
         .stat-box b { font-size: 20px; color: var(--royal-purple); }
 
-        /* 2. 養殖卡片區 */
+        /* 養殖卡片區 */
         .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 40px 25px;
-            padding-top: 30px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 45px 25px; padding-top: 40px;
         }
 
         .animal-card {
-            background: white;
-            border-radius: 35px;
-            border: 4px solid white;
-            outline: 2px solid var(--vine-green);
-            position: relative;
-            padding: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-            text-align: center;
+            background: white; border-radius: 35px; border: 4px solid white;
+            outline: 2px solid var(--vine-green); position: relative;
+            padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); text-align: center;
         }
 
-        /* 漂浮蛋/動物圓框 */
+        /* 漂浮動物頭像 */
         .avatar-circle {
-            width: 100px; height: 100px;
-            background: white;
-            border: 5px solid var(--vine-green);
-            border-radius: 50%;
-            position: absolute;
-            top: -55px; left: 50%;
-            transform: translateX(-50%);
+            width: 100px; height: 100px; background: white;
+            border: 5px solid var(--vine-green); border-radius: 50%;
+            position: absolute; top: -55px; left: 50%; transform: translateX(-50%);
             display: flex; align-items: center; justify-content: center;
-            font-size: 55px;
-            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+            font-size: 55px; box-shadow: 0 8px 15px rgba(0,0,0,0.1);
             animation: float 3s ease-in-out infinite;
         }
 
@@ -82,185 +63,20 @@
             50% { transform: translate(-50%, -15px); }
         }
 
-        /* 邊框裝飾 */
         .deco-vine { position: absolute; top: 10px; right: 15px; font-size: 18px; color: var(--magic-gold); }
-        .deco-star { position: absolute; bottom: 10px; left: 15px; font-size: 18px; }
-
-        .month-name { font-size: 22px; font-weight: bold; color: var(--royal-purple); margin-top: 40px; }
+        .month-name { font-size: 22px; font-weight: bold; color: var(--royal-purple); margin-top: 45px; }
 
         /* 進度條 */
         .progress-container {
-            background: #eee; height: 12px; border-radius: 6px;
+            background: #eee; height: 14px; border-radius: 7px;
             margin: 15px 0; overflow: hidden; border: 1px solid #ddd;
         }
-        .progress-bar { height: 100%; background: linear-gradient(90deg, #ffafcc, #ff85a1); transition: 1s; }
+        .progress-bar { height: 100%; background: linear-gradient(90deg, #ffafcc, #ff85a1); transition: 1.5s; width: 0%; }
 
-        /* 輸入區塊 */
+        /* 輸入與清單 */
         .input-group { display: flex; gap: 8px; margin: 15px 0; }
         input { flex: 1; border: 1.5px solid #eee; padding: 10px; border-radius: 12px; outline: none; }
         .magic-btn { background: var(--royal-purple); color: white; border: none; padding: 0 15px; border-radius: 12px; cursor: pointer; }
-
-        /* 紀錄清單 */
+        
         .log-list { max-height: 120px; overflow-y: auto; text-align: left; background: #fcfcfc; border-radius: 10px; padding: 5px; }
-        .log-item { display: flex; justify-content: space-between; padding: 8px; border-bottom: 1px solid #f0f0f0; font-size: 13px; }
-        .del-btn { color: #ffafcc; cursor: pointer; border: none; background: none; }
-
-    </style>
-</head>
-<body>
-
-<div class="overall-stats">
-    <div class="stat-box">年度總量：<b id="grand-total">0</b> 本</div>
-    <div class="stat-box">已孵化：<b id="hatched-count">0</b> 隻</div>
-</div>
-
-<table class="summary-table">
-    <thead>
-        <tr>
-            <th>月份</th>
-            <th>守護獸</th>
-            <th>數量</th>
-            <th>達成率</th>
-        </tr>
-    </thead>
-    <tbody id="table-body">
-        </tbody>
-</table>
-
-<div class="grid-container" id="card-grid"></div>
-
-<script>
-    const CONFIG = [
-        { m: 1, name: "一月", animal: "長頸鹿", icons: ["🥚", "🦒", "🦒👑"] },
-        { m: 2, name: "二月", animal: "狐狸", icons: ["🥚", "🦊", "🦊✨"] },
-        { m: 3, name: "三月", animal: "狗狗", icons: ["🥚", "🐶", "🐕‍🦺🥇"] },
-        { m: 4, name: "四月", animal: "大象", icons: ["🥚", "🐘", "🐘🏰"] },
-        { m: 5, name: "五月", animal: "變色龍", icons: ["🥚", "🦎", "🌈🦎"] },
-        { m: 6, name: "六月", animal: "腕龍", icons: ["🥚", "🦕", "🦕👑"] },
-        { m: 7, name: "七月", animal: "貓咪", icons: ["🥚", "🐱", "🐈✨"] },
-        { m: 8, name: "八月", animal: "暴龍", icons: ["🥚", "🐊", "🦖🔥"] },
-        { m: 9, name: "九月", animal: "泰迪熊", icons: ["🥚", "🧸", "🧸🎀"] },
-        { m: 10, name: "十月", animal: "兔子", icons: ["🥚", "🐰", "🐇🌙"] },
-        { m: 11, name: "十一月", animal: "鴨子", icons: ["🥚", "🐥", "🦆👑"] },
-        { m: 12, name: "十二月", animal: "老虎", icons: ["🥚", "🐯", "🐯❄️"] }
-    ];
-
-    // 取得資料
-    let storage = JSON.parse(localStorage.getItem("disney_zoo_2026")) || {};
-
-    async function addEntry(m) {
-    const input = document.getElementById(`in-${m}`);
-    const bookTitle = input.value;
-    if (!bookTitle) return;
-
-    // 這裡替換成你部署後得到的 Google Apps Script 網址
-    const scriptURL = "https://script.google.com/macros/s/AKfycbwxip4kg0F7D9EJj2vqxdejkSDCcRcSNEzOe8OhBw2PhaCaeqjlQ6SKWUnEoKsXTVmY/exec";
-
-    // 1. 本地顯示邏輯 (先讓網頁有反應)
-    if (!storage[m]) storage[m] = [];
-    const newBook = { id: Date.now(), title: bookTitle };
-    storage[m].push(newBook);
-    save(); // 呼叫原本的存檔與渲染函式
-    input.value = "";
-
-    // 2. 雲端同步邏輯 (fetch)
-    try {
-        console.log("正在同步到雲端...");
-        const response = await fetch(scriptURL, {
-            method: "POST",
-            mode: "no-cors", // 避免跨網域限制問題
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                month: m,
-                title: bookTitle
-            }),
-        });
-        console.log("雲端同步完成！");
-    } catch (error) {
-        console.error("雲端同步失敗:", error);
-    }
-}
-    function removeEntry(m, id) {
-        storage[m] = storage[m].filter(x => x.id !== id);
-        save();
-    }
-
-    function save() {
-        localStorage.setItem("disney_zoo_2026", JSON.stringify(storage));
-        render();
-    }
-
-    function render() {
-        const grid = document.getElementById("card-grid");
-        const table = document.getElementById("table-body");
-        grid.innerHTML = "";
-        table.innerHTML = "";
-
-        let totalBooks = 0;
-        let hatchedCount = 0;
-
-        CONFIG.forEach(cfg => {
-            const list = storage[cfg.m] || [];
-            const count = list.length;
-            totalBooks += count;
-
-            // 進化與圖示邏輯
-            let stage = 0; // 0-10本: 蛋
-            if (count >= 11 && count <= 19) stage = 1; // 11-19本: 幼年
-            if (count >= 20) { stage = 2; hatchedCount++; } // 20本: 成年
-
-            const percent = Math.min((count / 20) * 100, 100).toFixed(0);
-
-            // 更新表格
-            table.innerHTML += `
-                <tr>
-                    <td>${cfg.name}</td>
-                    <td>${count >= 11 ? cfg.icons[stage] : "🥚"}</td>
-                    <td>${count} 本</td>
-                    <td>${percent}%</td>
-                </tr>
-            `;
-
-            // 更新卡片
-            const card = document.createElement("div");
-            card.className = "animal-card";
-            card.innerHTML = `
-                <div class="deco-vine">🌙</div>
-                <div class="deco-star">🌿</div>
-                <div class="avatar-circle">${cfg.icons[stage]}</div>
-                <div class="month-name">${cfg.name}</div>
-                <div style="font-size:12px; color:var(--vine-green); font-weight:bold;">${cfg.animal}小窩</div>
-                
-                <div class="progress-container">
-                    <div class="progress-bar" style="width: ${percent}%"></div>
-                </div>
-                <small>成長能量：${count} / 20</small>
-
-                <div class="input-group">
-                    <input type="text" id="in-${cfg.m}" placeholder="添加讀過的書...">
-                    <button class="magic-btn" onclick="addEntry(${cfg.m})">🪄</button>
-                </div>
-
-                <div class="log-list">
-                    ${list.slice().reverse().map(b => `
-                        <div class="log-item">
-                            <span>✨ ${b.title}</span>
-                            <button class="del-btn" onclick="removeEntry(${cfg.m}, ${b.id})">✕</button>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-            grid.appendChild(card);
-        });
-
-        document.getElementById("grand-total").innerText = totalBooks;
-        document.getElementById("hatched-count").innerText = hatchedCount;
-    }
-
-    render();
-</script>
-
-</body>
-</html>
+        .log-item { display: flex; justify-content: space-between; padding: 8px; border-bottom: 1px solid #f0f0f
